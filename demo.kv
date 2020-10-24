@@ -1,0 +1,678 @@
+<MyTable>:
+    size_hint: 0.9, 0.6
+    use_pagination: True
+
+ScreenManager:
+    LoginScreen:
+        name: 'login'
+        id: login
+    MainScreen:
+        id: main
+        name: 'main'
+    YourAccount:
+        id: account
+        name: 'account'
+    BudgetScreen:
+    GuidedCaseScreen:
+        id: gcase
+        name: 'gcase'
+    InstructionScreen:
+    GuidedMotherboardScreen:
+        id: gmobo
+        name: 'gmobo'
+    GuidedCpuScreen:
+        id: gcpu
+        name: 'gcpu'
+    GuidedGpuScreen:
+        id: ggpu
+        name: 'ggpu'
+    GuidedRamScreen:
+        id: gram
+        name: 'gram'
+    GuidedCoolerScreen:
+        id: gcooler
+        name: 'gcooler'
+    GuidedStorageScreen:
+        id: gstorage
+        name: 'gstorage'
+    GuidedPSUScreen:
+        id: gpsu
+        name: 'gpsu'
+    CompatibilityChecker:
+        id: compatible
+        name: 'compatible'
+    YourAccount:
+        id: youraccount
+        name: 'youraccount'
+    AdminScreen:
+        id: admin
+        name: 'admin'
+
+<MDTextField>:
+    mode: "rectangle"
+    size_hint: (None,None)
+    height: 30
+    text_color: (1,1,1,1)
+    width: 250
+
+<MDRectangleFlatButton>:
+    size_hint: (None, None)
+    size: (140,33)
+    pos_hint: {'center_x':0.5, 'center_y':0.5}
+
+
+<LoginScreen>:
+    name: 'login'
+
+    FloatLayout:
+
+        MDTextField:
+            id: uname
+            hint_text: "Username"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.725}
+            multiline: False
+
+        MDTextField:
+            id: passw
+            password: True
+            hint_text: 'Password'
+            helper_text: "Make your password at least 8 characters long. "
+            helper_text_mode: "on_focus"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+
+        Label:
+            id: errordispl
+            font_name: 'OpenSans'
+            pos_hint: {'center_x': 0.47, 'center_y': 0.3}
+            markup: True
+            text: '[color=000000][/color]'
+
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.295, 'center_y': 0.46}
+            text: 'Login'
+            on_release:
+                root.logincheck()
+            #background_color: (0.157,0.455,0.753,1)
+            #background_normal: ''
+
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.669, 'center_y': 0.46}
+            #background_color: (0.157,0.455,0.753,1)
+            #background_normal: ''
+            text: 'Create Account'
+            on_release:
+                root.createaccount()
+
+<MainScreen>:
+    name: 'main'
+
+    FloatLayout:
+        MDLabel:
+            markup: True
+            font_name: 'OpenSans'
+            text: "Want us to help you pick all your \nparts step by step without peripherals?\nPick the [b]guided part builder[/b]. \n\nWant to add information to [b]your \naccount[/b] or view your orders? \nThat's the last button for you."
+            #pos_hint: {'center_x': 0.6, 'center_y': 0.7}
+            halign: 'center'
+            pos_hint: {'center_y': 0.7}
+        MDRectangleFlatButton:
+            text: 'Guide me'
+            pos_hint: {'center_x': 0.2, 'center_y': 0.38}
+            on_release:
+                root.manager.current = 'instructions'
+        #MDRectangleFlatButton:
+            #text: 'Admin'
+            #pos_hint: {'center_x': 0.49, 'center_y': 0.38}
+            #on_release:
+            #    root.manager.current = 'admin'
+            #    app.windowsize()
+        MDRectangleFlatButton:
+            text: 'My Account'
+            pos_hint: {'center_x': 0.8, 'center_y': 0.38}
+            on_release:
+                root.manager.current = 'account'
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.49, 'center_y': 0.2}
+            text: "Logout"
+            on_release:
+                root.manager.current = 'login'
+                app.originalsize()
+                curruser = None
+
+<AdminScreen>:
+    name: 'admin'
+    id: admin
+
+    MDBottomNavigation:
+        panel_color: 1,1,1,1
+
+        MDBottomNavigationItem:
+            text: "Add cooler/hdd/psu/ram"
+
+            FloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+                    Rectangle:
+                        source:'1.png'
+                        size: root.width, root.height
+                        pos: self.pos
+                    Rectangle:
+                        size: root.width/1.2, root.height/1.2
+                        pos: 85,41.5
+
+        MDBottomNavigationItem:
+            text: "Add a CPU"
+        MDBottomNavigationItem:
+            text: "Add a Motherboard"
+        MDBottomNavigationItem:
+            text: "Add a GPU"
+        MDBottomNavigationItem:
+            text: "Add a Case"
+
+
+
+<GuidedCaseScreen>:
+    name: 'gcase'
+    id: gcase
+
+    FloatLayout:
+        MDLabel:
+            markup: True
+            id: errorcase
+            text: ''
+            pos_hint: {'center_y': 0.8}
+            halign: 'center'
+        MDTextField:
+            id: casein
+            markup: True
+            hint_text: 'Enter CaseID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show Cases'
+            on_release:
+                app.data_table_one.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'instructions'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+
+
+<InstructionScreen>:
+    name: 'instructions'
+    id: instructions
+
+    FloatLayout:
+        MDLabel:
+            font_name: 'OpenSans'
+            halign: 'center'
+            pos_hint: {'center_y':0.6}
+            markup: True
+            text: 'Remember these rules of thumb for compatibility: \n\nThe cpu [b]socket[/b] should be the \n[b]same[/b] as the motherboard. \n \nThe [b]length[/b] of the GPU should \nbe [b]smaller[/b] than case length. \n\nIf the motherboard is [b]EATX[/b], only \na [b]full tower[/b] case can fit it. \n\nMake sure the [b]wattage[/b] of your PSU \nis [b]high enough[/b] for the other parts.'
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.3, 'center_y': 0.15}
+            text: "Let's move on"
+            on_release:
+                root.manager.current = 'gcase'
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.7, 'center_y': 0.15}
+            text: "Go back ?"
+            on_release:
+                root.manager.current = 'main'
+
+<GuidedMotherboardScreen>
+    name: 'gmobo'
+    id: gmobo
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: moboselect
+            hint_text: 'Enter MoboID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show Mobos'
+            on_release:
+                app.data_table_two.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gcase'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedCpuScreen>:
+    name: 'gcpu'
+    id: gcpu
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: cpuselect
+            hint_text: 'Enter CpuID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show CPUs'
+            on_release:
+                app.data_table_three.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gmobo'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedGpuScreen>:
+    name: 'ggpu'
+    id: ggpu
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: gpuselect
+            hint_text: 'Enter GpuID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show GPUs'
+            on_release:
+                app.data_table_four.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gcpu'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedRamScreen>:
+    name: 'ggpu'
+    id: ggpu
+
+    FloatLayout:
+
+        MDTextField:
+            markup: True
+            id: ramselect
+            hint_text: 'Enter RamID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show RAM'
+            on_release:
+                app.data_table_five.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'ggpu'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedCoolerScreen>:
+    name: 'gcooler'
+    id: gcooler
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: coolerselect
+            hint_text: 'Enter CoolerID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show Coolers'
+            on_release:
+                app.data_table_six.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gram'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedStorageScreen>:
+    name: 'gstorage'
+    id: gstorage
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: storageselect
+            hint_text: 'Enter StorageID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Select'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show Storage'
+            on_release:
+                app.data_table_seven.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gcooler'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+<GuidedPSUScreen>:
+
+    FloatLayout:
+        MDTextField:
+            markup: True
+            id: psuselect
+            hint_text: 'Enter PSU ID in digits.'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.62}
+            multiline: False
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.3,'center_y': 0.46}
+            text: 'Continue'
+            on_release:
+                app.originalsize()
+                root.storeparts()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.68, 'center_y': 0.46}
+            text: 'Show PSUs'
+            on_release:
+                app.data_table_eight.open()
+                app.windowsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            text: 'Go Back'
+            on_release:
+                root.manager.current = 'gstorage'
+                app.originalsize()
+        MDRectangleFlatButton:
+            pos_hint: {'center_x':0.5, 'center_y': 0.15}
+            text: 'Remove from Cart'
+            on_release:
+                root.delparts()
+
+
+<CompatibilityChecker>:
+    id: compatible
+    name: 'compatible'
+
+    FloatLayout:
+        MDLabel:
+            markup: True
+            id: label1
+            pos_hint: {'center_y': 0.8}
+            halign: 'center'
+            text: ''
+        MDLabel:
+            markup: True
+            id: label2
+            halign: 'center'
+            pos_hint: {'center_y': 0.6}
+            text: ''
+        MDLabel:
+            markup: True
+            id: label3
+            halign: 'center'
+            pos_hint: {'center_y': 0.4}
+            text: ''
+        MDLabel:
+            markup: True
+            id: label4
+            halign: 'center'
+            pos_hint: {'center_y': 0.4}
+            text: ''
+        MDRectangleFlatButton:
+            text: 'Check Compatibility'
+            pos_hint: {'center_x': 0.3, 'center_y':0.2}
+            on_release:
+                root.check()
+        MDRectangleFlatButton:
+            text: 'Empty cart, restart'
+            pos_hint: {'center_x': 0.7, 'center_y': 0.2}
+            on_release:
+                root.emptycart()
+                root.manager.current = 'main'
+        MDRectangleFlatButton:
+            text: 'Complete my order'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.35}
+            on_release:
+                app.windowsize()
+                root.manager.current='account'
+
+<YourAccount>:
+    MDLabel:
+        text: 'text'
+    MDBottomNavigation:
+        panel_color: 1, 1, 1, 1
+
+        MDBottomNavigationItem:
+            name: 'customerdetails'
+            id: customerdetails
+            text: 'Add / Change Details'
+
+            FloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+                    Rectangle:
+                        source:'1.png'
+                        size: root.width, root.height
+                        pos: self.pos
+                    Rectangle:
+                        size: root.width/1.2, root.height/1.2
+                        pos: 85,41.5
+                Label:
+                    text: 'Fill in your details here'
+                    pos_hint: {'center_x': 0.3, 'center_y': 0.88}
+                    color: 0,0,0,1
+                    font_size: 28
+                    font_name: 'OpenSans-SemiBold'
+                MDTextField:
+                    id: customerphone
+                    multiline: False
+                    fill_color: 1,1,1,1
+                    pos_hint: {'center_x': 0.31, 'center_y': 0.79}
+                    hint_text: 'Phone Number'
+                    size_hint_x: 0.3
+                    size_hint_y: 0.062
+                MDTextField:
+                    id: customeremail
+                    multiline: False
+                    fill_color: 1,1,1,1
+                    pos_hint: {'center_x': 0.31, 'center_y': 0.72}
+                    hint_text: 'Email ID'
+                    size_hint_x: 0.3
+                    size_hint_y: 0.062
+                MDTextField:
+                    id: customeraddress
+                    fill_color: 1,1,1,1
+                    pos_hint: {'center_x': 0.41, 'center_y': 0.5}
+                    hint_text: 'Address'
+                    size_hint_x: 0.5
+                    size_hint_y: 0.35
+                MDFlatButton:
+                    text_color: 0,0,0,1
+                    md_bg_color: 0.27, 0.34, 0.8, 0.8
+                    text: "Submit"
+                    font_name: 'Roboto-Regular'
+                    pos_hint: {'center_x': 0.19, 'center_y': 0.27}
+                    on_release:
+                        root.customerdetails()
+                MDFlatButton:
+                    text_color: 0,0,0,1
+                    md_bg_color: 0.27, 0.34, 0.8, 0.8
+                    text: "Go Back"
+                    font_name: 'Roboto-Regular'
+                    pos_hint: {'center_x': 0.291, 'center_y': 0.27}
+                    on_release:
+                        root.manager.current='main'
+                        app.originalsize()
+                Label:
+                    id: customererror
+                    markup: True
+                    text: ''
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.21}
+
+        MDBottomNavigationItem:
+            name: 'cartscreen'
+            text: 'Cart'
+            FloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+                    Rectangle:
+                        source:'2.png'
+                        size: root.width, root.height
+                        pos: self.pos
+                    Rectangle:
+                        size: root.width/2.5, root.height/2.5
+                        pos: 300,215
+                MDFlatButton:
+                    text_color: 1,1,1,1
+                    md_bg_color: 0, 0, 0, 1
+                    text: "View Cart"
+                    pos_hint: {'center_x': 0.5, 'center_y':0.63}
+                    on_release:
+                        app.cartandorders()
+                        app.data_table_cart.open()
+                MDFlatButton:
+                    text_color: 1,1,1,1
+                    md_bg_color: 0,0,0,1
+                    text: "Order Parts"
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.53}
+                    on_release:
+                        root.carttoorders()
+                MDFlatButton:
+                    text_color: 1,1,1,1
+                    md_bg_color: 0,0,0,1
+                    text: "Clear Cart"
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.43}
+                    on_release:
+                        app.emptycart()
+                Label:
+                    markup: True
+                    text: ''
+                    id: successlabel
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.36}
+
+        MDBottomNavigationItem:
+            on_tab_touch_down:
+                root.customeriddisplay()
+            name: 'orderscreen'
+            text: 'Orders'
+
+            FloatLayout:
+                canvas.before:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+                    Rectangle:
+                        source:'3.jpg'
+                        size: root.width, root.height
+                        pos: self.pos
+                    Rectangle:
+                        size: root.width/1.2, root.height/1.2
+                        pos: 85,41.5
+                MDFlatButton:
+                    text_color: 1,1,1,1
+                    md_bg_color: 0,0,0,1
+                    text: "Show Orders"
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_release:
+                        app.orders()
+                        app.data_table_orders.open()
+                Label:
+                    id: id
+                    markup: True
+                    text: ''
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.35}
